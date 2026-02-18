@@ -30,14 +30,20 @@ private UserDetailsService userDetailsService;
 // this all support builder pattern
         http.csrf(customizer -> customizer.disable());
         // Any authenticated request can access
+//
 //        http.authorizeHttpRequests(request ->
 //                request.requestMatchers("register","login").permitAll().anyRequest());
+
+
+        http.authorizeHttpRequests(request ->
+                request.requestMatchers("register","login").permitAll().anyRequest().authenticated()
+        );
         // login with default page
         http.formLogin(Customizer.withDefaults());
         // if need to see responce body without page
         http.httpBasic(Customizer.withDefaults());
 //        to make stateless if you need to generatesession id every time
-//        http.sessionManagement(session ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.sessionManagement(session ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build(); //will return SecurityFilterChain obj
     }
 

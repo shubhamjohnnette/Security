@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Service
 public class UserService {
+
+    @Autowired
+    private JWTService jwtService;
     @Autowired
     private UserRepo userRepo;
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
@@ -31,7 +34,7 @@ public class UserService {
                     .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
             if(authentication.isAuthenticated()) {
-                return "Your account has been successfully verified.";
+                return jwtService.generateToken(user.getUsername());
             }else  {
                 return "Account verification has failed.";
             }
