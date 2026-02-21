@@ -18,10 +18,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    @Autowired
+    private JwtFilter jwtFilter;
     @Autowired
 private UserDetailsService userDetailsService;
     @Bean
@@ -44,6 +47,7 @@ private UserDetailsService userDetailsService;
         http.httpBasic(Customizer.withDefaults());
 //        to make stateless if you need to generatesession id every time
         http.sessionManagement(session ->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+       http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build(); //will return SecurityFilterChain obj
     }
 
